@@ -1,7 +1,7 @@
 //If Number == 0 return false. is
 extension Int {
     var isPositive: Bool {
-        return self>=0
+        return self >= 0
     }
     var isNegative: Bool {
         return !isPositive
@@ -20,7 +20,7 @@ extension Int {
     subscript(index: Int) -> (Int?) {
         get {
             if index <= self.count - 1  {
-                let temp = String(self)
+                let temp    = String(self)
                 let end     = temp.index(temp.startIndex, offsetBy: index + 1)
                 let start   = temp.index(temp.startIndex, offsetBy: index)
                 let range   = String(temp[start..<end])
@@ -33,7 +33,7 @@ extension Int {
         set {
             if (index <= self.count - 1) && (newValue != nil){
                 let newChar = String(newValue!).first
-                var temp = String(self)
+                var temp    = String(self)
                 let start   = temp.index(temp.startIndex, offsetBy: index)
                 let end     = temp.index(temp.startIndex, offsetBy: index + 1)
                 temp.removeSubrange(start..<end)
