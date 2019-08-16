@@ -19,7 +19,7 @@ extension Int {
 extension Int {
     subscript(index: Int) -> (Int?) {
         get {
-            if index <= self.count - 1  {
+            if index < self.count {
                 let temp    = String(self)
                 let end     = temp.index(temp.startIndex, offsetBy: index + 1)
                 let start   = temp.index(temp.startIndex, offsetBy: index)
@@ -43,12 +43,31 @@ extension Int {
         }
     }
 }
-/* extension Int {
- subscript(index: Int) -> (Int) {
- var temp = 1
- for _ in 0..<index {
- temp *= 10
- }
- return (self/temp) % 10
- }
- } */
+/*
+var a = 99
+a.count
+a.isNegative
+a.isPositive
+a.bool
+a[100]
+a[0] = 1
+print(a)
+*/
+extension UInt8 {
+    //extension Int8 {
+    
+    func binary() -> String {
+        var result = ""
+        for i in 0..<8 {
+            let mask = 1 << i
+            let set = Int(self) & mask != 0
+            result = (set ? "1" : "0") + result
+        }
+        return result
+    }
+}
+
+//let a: UInt8 = 10
+//let a: Int8 = 10
+//a.binary()
+ 
