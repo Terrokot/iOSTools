@@ -17,7 +17,7 @@ class DetailVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(trackTitle)
         image.image = UIImage(named: trackTitle)
         titleLabel.text = trackTitle
         titleLabel.numberOfLines = 0
