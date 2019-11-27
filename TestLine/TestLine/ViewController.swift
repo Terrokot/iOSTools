@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
     }
     
     override func viewWillLayoutSubviews() {
@@ -38,11 +39,13 @@ class ViewController: UIViewController {
         
         guard let _ = firstPoint else {
             firstPoint = touchPoint
+            addPoint(location: touchPoint)
             return
         }
         
         guard let _  = secondPoint else {
             secondPoint = touchPoint
+            addPoint(location: touchPoint)
             addLine(fromPoint: firstPoint!, toPoint: secondPoint!)
             
             firstPoint = nil
@@ -62,5 +65,20 @@ class ViewController: UIViewController {
         line.lineWidth = 1
         line.lineJoin = CAShapeLayerLineJoin.round
         self.view.layer.addSublayer(line)
+    }
+    func addPoint(location: CGPoint) {
+        let circlePath = UIBezierPath(arcCenter: location, radius: CGFloat(3), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = circlePath.cgPath
+
+        //change the fill color
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        //you can change the stroke color
+        shapeLayer.strokeColor = UIColor.red.cgColor
+        //you can change the line width
+        shapeLayer.lineWidth = 3.0
+
+        view.layer.addSublayer(shapeLayer)
     }
 }
