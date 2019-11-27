@@ -33,8 +33,6 @@ class ViewController: UIViewController {
         view.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    
-    
     @objc func showMoreActions(touch: UITapGestureRecognizer) {
         let touchPoint = touch.location(in: self.view)
         
@@ -66,9 +64,3 @@ class ViewController: UIViewController {
         self.view.layer.addSublayer(line)
     }
 }
-
-
-
-
-
-
