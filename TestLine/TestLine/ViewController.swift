@@ -97,8 +97,9 @@ class ViewController: UIViewController {
             secondPoint = addPoint(location: touchPoint)
             addLine(fromPoint: firstCoordinate!, toPoint: secondCoordinate!)
             
-            //firstCoordinate = nil
-            //secondCoordinate = nil
+            //remove if use PanGesture
+            firstCoordinate = nil
+            secondCoordinate = nil
             return
         }
     }
