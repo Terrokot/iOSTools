@@ -29,8 +29,7 @@ class ViewController: UIViewController {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragTheView))
         self.view.addGestureRecognizer(panGestureRecognizer)
     }
-    
-    
+        
     @objc func dragTheView(recognizer: UIPanGestureRecognizer) {
         
         if recognizer.state == .began {
@@ -64,7 +63,6 @@ class ViewController: UIViewController {
             }
             
             //recognizer.setTranslation(CGPoint.zero, in: self.view)
-          
     }
     }
     
@@ -74,21 +72,15 @@ class ViewController: UIViewController {
         return CGFloat(sqrt(xDist * xDist + yDist * yDist))
     }
     
-    
-    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         let viewBounds = self.view.bounds
         button.backgroundColor = UIColor.gray
         button.frame = CGRect(x: (viewBounds.width/10), y: (viewBounds.height/10)*9 - (viewBounds.height/20), width: (viewBounds.width/10)*8, height: viewBounds.height/10)
         
-        
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showMoreActions(touch:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
         view.addGestureRecognizer(tapGestureRecognizer)
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragTheView))
-        view.addGestureRecognizer(panGestureRecognizer)
     }
     
     @objc func showMoreActions(touch: UITapGestureRecognizer) {
@@ -107,7 +99,6 @@ class ViewController: UIViewController {
             
             //firstCoordinate = nil
             //secondCoordinate = nil
-            
             return
         }
     }
@@ -134,7 +125,6 @@ class ViewController: UIViewController {
         shapeLayer.lineWidth = 3.0
 
         view.layer.addSublayer(shapeLayer)
-        
         
         return circlePath
     }
