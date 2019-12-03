@@ -6,105 +6,104 @@
 //  Copyright © 2019 Egor Tereshonok. All rights reserved.
 //
 
-//MARK: Все работает, нужно только вывести на экран
 import UIKit
 
 class ViewController: UIViewController {
     
     @IBOutlet var button: UIButton!
-        
+    
     var tapGestureRecognizer: UITapGestureRecognizer!
     
-    var firstCoordinate: CGPoint?
-    var secondCoordinate: CGPoint?
+    var firstPoint: CGPoint?
+    var secondPoint: CGPoint?
     
-    var firstPoint: UIBezierPath?
-    var secondPoint: UIBezierPath?
-    
-    var line: UIBezierPath?
-    
+    var lineLayers: [CALayer] = [CALayer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragTheView))
-        self.view.addGestureRecognizer(panGestureRecognizer)
-    }
+        view.addGestureRecognizer(panGestureRecognizer)
         
-    @objc func dragTheView(recognizer: UIPanGestureRecognizer) {
-        
-        if recognizer.state == .began {
-            print("Gesture began")
-            
-        } else if recognizer.state == .changed {
-            let translation = recognizer.translation(in: view)
-            let recognizerStartPoint = recognizer.location(in: self.view)
-            if let a = firstCoordinate, let b = secondCoordinate {
-            if distance(firstPoint: a, secondPoint: recognizerStartPoint) < distance(firstPoint: b, secondPoint: recognizerStartPoint) {
-                
-                let newX = a.x + translation.x
-                let newY = a.y + translation.y
-                firstPoint?.move(to: CGPoint(x: newX, y: newY))
-                firstCoordinate = CGPoint(x: newX, y: newY)
-
-                print(firstPoint!.currentPoint)
-                print("test")
-                firstPoint?.removeAllPoints()
-                
-            } else {
-                
-                let newX = b.x + translation.x
-                let newY = b.y + translation.y
-                secondPoint?.move(to: CGPoint(x: newX, y: newY))
-                secondCoordinate = CGPoint(x: newX, y: newY)
-                }
-            } else if recognizer.state == .ended {
-                firstPoint?.reversing()
-
-            }
-            
-            //recognizer.setTranslation(CGPoint.zero, in: self.view)
-    }
-    }
-    
-    func distance(firstPoint a: CGPoint, secondPoint b: CGPoint) -> CGFloat {
-        let xDist = a.x - b.x
-        let yDist = a.y - b.y
-        return CGFloat(sqrt(xDist * xDist + yDist * yDist))
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        let viewBounds = self.view.bounds
         button.backgroundColor = UIColor.gray
-        button.frame = CGRect(x: (viewBounds.width/10), y: (viewBounds.height/10)*9 - (viewBounds.height/20), width: (viewBounds.width/10)*8, height: viewBounds.height/10)
         
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.showMoreActions(touch:)))
-        tapGestureRecognizer.numberOfTapsRequired = 1
+        button.frame = CGRect(x: view.frame.width / 10,
+                              y: (view.frame.height / 10) * 9 - view.frame.height / 20,
+                              width: (view.frame.width / 10) * 8,
+                              height: view.frame.height / 10)
+        
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapAction(touch:)))
         view.addGestureRecognizer(tapGestureRecognizer)
     }
     
-    @objc func showMoreActions(touch: UITapGestureRecognizer) {
-        let touchPoint = touch.location(in: self.view)
+    @objc func dragTheView(recognizer: UIPanGestureRecognizer) {
         
-        guard let _ = firstCoordinate else {
-            firstCoordinate = touchPoint
-            firstPoint = addPoint(location: touchPoint)
+        guard let a = firstPoint, let b = secondPoint else {
             return
         }
         
-        guard let _  = secondCoordinate else {
-            secondCoordinate = touchPoint
-            secondPoint = addPoint(location: touchPoint)
-            addLine(fromPoint: firstCoordinate!, toPoint: secondCoordinate!)
-            
-            //remove if use PanGesture
-            firstCoordinate = nil
-            secondCoordinate = nil
-            return
+        let location = recognizer.location(in: view)
+        
+        if distance(firstPoint: a, secondPoint: location) < distance(firstPoint: b, secondPoint: location) {
+            firstPoint = location
+        } else {
+            secondPoint = location
         }
+        
+        drawResult()
     }
     
-    func addLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
+    @objc func tapAction(touch: UITapGestureRecognizer) {
+    
+        let touchPoint = touch.location(in: view)
+            
+        if firstPoint == nil {
+            firstPoint = touchPoint
+            drawResult()
+            return
+        }
+        
+        if secondPoint == nil {
+            secondPoint = touchPoint
+            drawResult()
+            return
+        }
+        
+    }
+    
+    private func drawResult() {
+        
+        clearSublayers()
+        
+        guard let firstPoint = firstPoint else {
+            return
+        }
+        
+        addPoint(location: firstPoint)
+        
+        guard let secondPoint = secondPoint else {
+            return
+        }
+        
+        addPoint(location: secondPoint)
+        
+        addLine(fromPoint: firstPoint, toPoint: secondPoint)
+        
+    }
+    
+    private func clearSublayers() {
+        for layer in lineLayers {
+            layer.removeFromSuperlayer()
+        }
+        lineLayers = []
+    }
+    
+    private func distance(firstPoint a: CGPoint, secondPoint b: CGPoint) -> CGFloat {
+        let xDist = a.x - b.x
+        let yDist = a.y - b.y
+        return sqrt(xDist * xDist + yDist * yDist)
+    }
+    
+    private func addLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
         let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: start)
@@ -113,20 +112,32 @@ class ViewController: UIViewController {
         line.strokeColor = UIColor.red.cgColor
         line.lineWidth = 1
         line.lineJoin = CAShapeLayerLineJoin.round
-        self.view.layer.addSublayer(line)
+        lineLayers.append(line)
+        view.layer.addSublayer(line)
     }
     
-    func addPoint(location: CGPoint) -> (UIBezierPath) {
-        let circlePath = UIBezierPath(arcCenter: location, radius: CGFloat(3), startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-
+    private func addPoint(location: CGPoint) {
+        let circlePath = UIBezierPath(arcCenter: location,
+                                      radius: CGFloat(3),
+                                      startAngle: CGFloat(0),
+                                      endAngle: CGFloat.pi * 2,
+                                      clockwise: true)
+        
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = circlePath.cgPath
         shapeLayer.fillColor = UIColor.red.cgColor
         shapeLayer.strokeColor = UIColor.red.cgColor
         shapeLayer.lineWidth = 3.0
-
-        view.layer.addSublayer(shapeLayer)
         
-        return circlePath
+        lineLayers.append(shapeLayer)
+        view.layer.addSublayer(shapeLayer)
     }
+    
+    
+    @IBAction func clearButton(_ sender: Any) {
+        firstPoint = nil
+        secondPoint = nil
+        drawResult()
+    }
+    
 }
