@@ -24,15 +24,15 @@ class ViewController: UIViewController {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(dragTheView))
         view.addGestureRecognizer(panGestureRecognizer)
         
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapAction(touch:)))
+        view.addGestureRecognizer(tapGestureRecognizer)
+        
         button.backgroundColor = UIColor.gray
         
         button.frame = CGRect(x: view.frame.width / 10,
                               y: (view.frame.height / 10) * 9 - view.frame.height / 20,
                               width: (view.frame.width / 10) * 8,
                               height: view.frame.height / 10)
-        
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.tapAction(touch:)))
-        view.addGestureRecognizer(tapGestureRecognizer)
     }
     
     @objc func dragTheView(recognizer: UIPanGestureRecognizer) {
